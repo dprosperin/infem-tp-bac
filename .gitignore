@@ -1,0 +1,24 @@
+*~
+## Vim...
+.*.swp
+##python
+*.pyc
+__pycache__
+##build stuff
+*.o
+*.dep
+##Mac OS X stuff
+.DS_Store
+##LaTeX stuff
+*.aux
+*.log
+*.idx
+*.bbl
+*.blg
+*.synctex.gz
+*.toc
+*.out
+*.fdb_latexmk
+*.fls
+*.ilg
+*.ind
