@@ -34,3 +34,11 @@ def carRun(self):
 #associe les fonctions aux methodes de classes (ne pas modifier)
 ferry.run = ferryRun
 car.run = carRun
+
+#main…
+if __name__ == '__main__':
+    from bacGUI import MainWindow
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    app.exec_() #event loop

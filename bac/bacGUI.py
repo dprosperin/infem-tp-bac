@@ -13,17 +13,14 @@ from PyQt5.QtGui     import *
 import threading
 import time
 
-sys.path.append("sys")
-sys.path.append("bac")
-import infem
-import infemGUI
 from debugEvents import *
-
-from tpBac import *
-
+from baseThreads import *
 from mainwindow import Ui_mainwindow    #fichier généré
 
 class MainWindow(QMainWindow, Ui_mainwindow):
+    """ Application main window
+        Build the application and start threads.
+    """
 
     def __init__(self,*args,**kwargs):
         self.nb=0
@@ -44,7 +41,3 @@ class MainWindow(QMainWindow, Ui_mainwindow):
             c.start()
         ferryThread.start()
 
-app = QApplication(sys.argv)
-window = MainWindow()
-window.show()
-app.exec_() #event loop
