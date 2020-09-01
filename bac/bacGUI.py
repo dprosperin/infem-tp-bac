@@ -10,13 +10,13 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore    import *
 from PyQt5.QtGui     import *
 
-import threading
 import time
 
 from debugEvents import *
-from baseThreads import *
+from baseThreads import mainThread
 from mainwindow import Ui_mainwindow    #fichier généré
 
+import infemGUI
 class MainWindow(QMainWindow, Ui_mainwindow):
     """ Application main window
         Build the application and start threads.
@@ -26,6 +26,7 @@ class MainWindow(QMainWindow, Ui_mainwindow):
         self.nb=0
         super(MainWindow,self).__init__(*args,**kwargs)
         self.setupUi(self)
+        self.pbTerm.clicked.connect(self.terminateCallback)
         #semaphore view
         self.semaphoreView.setModel(infemGUI.sModel)
         infemGUI.sModel.updateColumnWidth.connect(self.semaphoreView.resizeColumnsToContents)
@@ -33,11 +34,9 @@ class MainWindow(QMainWindow, Ui_mainwindow):
         self.debugEventModel = debugEventModel()
         self.eventListView.setModel(self.debugEventModel)
         #threads
-        ferryThread = ferry(self.drawingWidget,self.debugEventModel)
-        carThreads = [None] * 10
-        for i in range(10): 
-            carThreads[i] = car(self.drawingWidget,i,ferryThread,self.debugEventModel)
-        for c in carThreads:
-            c.start()
-        ferryThread.start()
+        appli = mainThread(self.labTerm,self.drawingWidget,self.debugEventModel)
+        appli.start()
 
+    def terminateCallback(self):
+        self.labTerm.setText('Terminaison en cours…')
+        self.terminateCalled()

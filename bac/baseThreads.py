@@ -149,3 +149,25 @@ class car(threading.Thread):
         except FysomError:
             self.check(True,'ordre incorrect des étapes')
 
+class mainThread(threading.Thread):
+    """ Main thread that starts all the threads (car/ferry) and checks for correct termination.
+    """
+    def __init__(self,label,qdrawing,debugEventModel=None):
+        threading.Thread.__init__(self,name='main',daemon=True)
+        self.ferryThread = ferry(qdrawing,debugEventModel)
+        self.label = label
+        self.carThreads = [None] * 10
+        for i in range(10): 
+            self.carThreads[i] = car(qdrawing,i,self.ferryThread,debugEventModel)
+
+    def run(self):
+        #run
+        for c in self.carThreads:
+            c.start()
+        self.ferryThread.start()
+        #wait for termination
+        for c in self.carThreads:
+            c.join()
+        self.ferryThread.join()
+        self.label.setText("Ok!")
+        

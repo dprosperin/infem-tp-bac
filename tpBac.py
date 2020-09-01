@@ -18,8 +18,7 @@ def ferryRun(self):
         - self.traverser()
         - self.revenir()
     """
-    while True:
-        time.sleep(1)
+    time.sleep(1)
 
 def carRun(self):
     """ fonction principale de chaque voiture. Les méthodes principales sont:
@@ -27,9 +26,12 @@ def carRun(self):
         - self.embarquer()
         - self.debarquer()
     """
-    while True:
-        self.avancer()
-        time.sleep(1)
+    self.avancer()
+    time.sleep(1)
+
+def terminateCalled(self):
+    """ fonction appelée lors d'un clic sur le bouton de terminaison """
+    print("L'application doit se terminer correctement")
 
 #associe les fonctions aux methodes de classes (ne pas modifier)
 ferry.run = ferryRun
@@ -38,6 +40,7 @@ car.run = carRun
 #main…
 if __name__ == '__main__':
     from bacGUI import MainWindow
+    MainWindow.terminateCalled = terminateCalled
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
