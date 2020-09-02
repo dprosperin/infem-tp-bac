@@ -55,6 +55,14 @@ class SemaphoreModel(QAbstractTableModel):
             self.semaphores[idx] = (sem.name,sem.value,self.semaphores[idx][2])
         self.dataChanged.emit(self.index(idx,0),self.index(idx,2))
 
+    def removeWaitingThread(self,sem,threadName):
+        with self.mutex:
+            idx = self.semaphoreNames[sem.name]
+            self.waitingThreads[sem.name].remove(threadName)
+            threads = ' - '.join(self.waitingThreads[sem.name])
+            self.semaphores[idx] = (sem.name,-len(self.waitingThreads[sem.name]),threads)
+        self.dataChanged.emit(self.index(idx,0),self.index(idx,2))
+
     def addWaitingThread(self,sem,threadName):
         with self.mutex:
             idx = self.semaphoreNames[sem.name]
