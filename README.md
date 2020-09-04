@@ -5,7 +5,6 @@ Le TP Bac porte sur la synchronisation à l'aide de sémaphores. L'application p
 Les fichiers sont organisés:
 
 * `tpBac.py`: fichier à modifier: indiquer le code principal du bac et des voitures
-* `bacGui.py`: fichier principal, c'est le fichier principal de l'application complète. Il ne faut pas le modifier.
 * `sys/`: mécanisme de synchronisation avec les sémaphore, indépendamment de l'application
 * `bac/`: fichiers internes pour l'application complète.
 
@@ -18,8 +17,8 @@ pip install PyQt5 fysom
 ```
 
 ## Exécution
-Après avoir modifier le fichier `tpBac.py`, il faut *exécuter* le fichier `bacGui.py`, soit par un double-clic, soit en ligne de commande:
+Après avoir modifier le fichier `tpBac.py`, il faut *exécuter*, soit par un double-clic, soit en ligne de commande:
 
 ```
-python3 bacGui.py
+python3 tpBac.py
 ```
