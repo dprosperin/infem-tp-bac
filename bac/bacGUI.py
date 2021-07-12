@@ -34,6 +34,7 @@ class MainWindow(QMainWindow, Ui_mainwindow):
         #event list view
         self.debugEventModel = debugEventModel()
         self.eventListView.setModel(self.debugEventModel)
+        self.debugEventModel.signalScroll.connect(self.eventListView.scrollToBottom)
         #threads
         appli = mainThread(self.labTerm,self.drawingWidget,self.debugEventModel)
         appli.start()

@@ -35,7 +35,8 @@ class ferry(threading.Thread):
                                     ])
     
     def check(self,cond,info,msgIfOk=True):
-        """ basic verification (assert(cond)). If the condition is not ok, report the pb and ends the thread.
+        """ basic verification (assert(cond)). 
+        If the condition is not ok, report the pb and ends the thread.
         info is an extra information (char string)
         """
         if not cond:
@@ -97,7 +98,8 @@ class car(threading.Thread):
                                     ])
 
     def check(self,cond,info,msgIfOk=True):
-        """ basic verification (assert(cond)). If the condition is not ok, report the pb and ends the thread.
+        """ basic verification (assert(cond)).
+        If the condition is not ok, report the pb and ends the thread.
         info is an extra information (char string)
         """
         if not cond:
