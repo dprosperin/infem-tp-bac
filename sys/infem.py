@@ -6,6 +6,7 @@ import threading
 import time
 from infemGUI import *
 
+#We should have a global lock, for the ou2Semaphore implementation
 __synchro__ = threading.Condition()
 
 class Semaphore():
@@ -24,11 +25,11 @@ class Semaphore():
         with __synchro__:
             while self.value <= 0:
                 if sModel:
-                    sModel.addWaitingThread(self,threading.currentThread().name)
+                    sModel.addWaitingThread(self.name,threading.currentThread().name)
                 __synchro__.wait()
             self.value -=1
             if sModel:
-                sModel.update(self)
+                sModel.update(self.name,self.value)
 
     def P(self):
         """ same as 'acquire'. wrapper for historical reasons """
@@ -41,10 +42,10 @@ class Semaphore():
         with __synchro__:
             #notify all so that they are blocked again and we can deduce
             #the list of waiting threads.
+            if sModel:
+                sModel.clearWaitingThread((self.name,self.value))
             __synchro__.notify_all() 
             self.value +=1
-            if sModel:
-                sModel.clearWaitingThread(self)
 
     def V(self):
         """ same as 'release'. wrapper for historical reasons """
@@ -63,32 +64,32 @@ def ou2Semaphore(s1,s2,timeout=None):
             result = 1
             s1.value -=1
             if sModel:
-                sModel.update(s1)
+                sModel.update(s1.name,s1.value)
         elif s2.value > 0:
             result = 2
             s2.value -=1
             if sModel:
-                sModel.update(s2)
+                sModel.update(s2.name,s2.value)
 
         while result == 0: # we will block
             if sModel:
                 threadName = threading.currentThread().name
-                sModel.addWaitingThread(s1,threadName)
-                sModel.addWaitingThread(s2,threadName)
+                sModel.addWaitingThread(s1.name,threadName)
+                sModel.addWaitingThread(s2.name,threadName)
             noTimeout = __synchro__.wait(timeout)
             if noTimeout:
                 if s1.value > 0:
                     result = 1
                     s1.value -=1
                     if sModel:
-                        sModel.update(s1)
-                        sModel.removeWaitingThread(s2,threading.currentThread().name)
+                        sModel.update(s1.name,s2.value)
+                        sModel.removeWaitingThread(s2.name,threading.currentThread().name)
                 elif s2.value > 0:
                     result = 2
                     s2.value -=1
                     if sModel:
-                        sModel.removeWaitingThread(s1,threading.currentThread().name)
-                        sModel.update(s2)
+                        sModel.removeWaitingThread(s1.name,threading.currentThread().name)
+                        sModel.update(s2.name,s2.value)
             else: #timeout
                 result = 3 #timeout
     return result
