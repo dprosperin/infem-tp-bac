@@ -30,6 +30,7 @@ class MainWindow(QMainWindow, Ui_mainwindow):
         #semaphore view
         self.semaphoreView.setModel(infemGUI.sModel)
         infemGUI.sModel.updateColumnWidth.connect(self.semaphoreView.resizeColumnsToContents)
+        infemGUI.sModel.updateColumnWidth.emit() #for semaphore already defined.
         #event list view
         self.debugEventModel = debugEventModel()
         self.eventListView.setModel(self.debugEventModel)
