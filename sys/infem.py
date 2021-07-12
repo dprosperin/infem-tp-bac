@@ -82,7 +82,7 @@ def ou2Semaphore(s1,s2,timeout=None):
                     result = 1
                     s1.value -=1
                     if sModel:
-                        sModel.update(s1.name,s2.value)
+                        sModel.update(s1.name,s1.value)
                         sModel.removeWaitingThread(s2.name,threading.currentThread().name)
                 elif s2.value > 0:
                     result = 2

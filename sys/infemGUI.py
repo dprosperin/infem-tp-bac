@@ -87,7 +87,8 @@ class SemaphoreModel(QAbstractTableModel):
         assert threading.current_thread() is threading.main_thread()
         idx = self.semaphoreNames[semName]
         self.waitingThreads[semName].remove(threadName)
-        threads = ' - '.join(self.waitingThreads[semName])
+        sortedList = sorted(self.waitingThreads[semName])
+        threads = ' - '.join(sortedList)
         self.semaphores[idx] = (semName,-len(self.waitingThreads[semName]),threads)
         self.dataChanged.emit(self.index(idx,0),self.index(idx,2))
 
@@ -100,7 +101,8 @@ class SemaphoreModel(QAbstractTableModel):
         assert threading.current_thread() is threading.main_thread()
         idx = self.semaphoreNames[semName]
         self.waitingThreads[semName].add(threadName)
-        threads = ' - '.join(self.waitingThreads[semName])
+        sortedList = sorted(self.waitingThreads[semName])
+        threads = ' - '.join(sortedList)
         self.semaphores[idx] = (semName,-len(self.waitingThreads[semName]),threads)
         self.dataChanged.emit(self.index(idx,0),self.index(idx,2))
 
