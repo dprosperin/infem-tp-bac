@@ -6,10 +6,11 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
 
-pb = QImage('bac/cross.png').scaled(16,16,Qt.KeepAspectRatio)
+pb  = QImage('bac/icons/cross.png').scaled(16,16,Qt.KeepAspectRatio)
+log = QImage('bac/icons/arrow-000.png').scaled(16,16,Qt.KeepAspectRatio)
 
 class debugEventModel(QAbstractListModel):
-    signalAddEv = pyqtSignal(bool,str)
+    signalAddEv = pyqtSignal(int,str)
     signalScroll = pyqtSignal()
 
     def __init__(self,*args,debugEvent=None,**kwargs):
@@ -24,8 +25,10 @@ class debugEventModel(QAbstractListModel):
         if role == Qt.ToolTipRole:
             return 'tooltip:'+text
         if role == Qt.DecorationRole:
-            if status:
+            if status==1: #error
                 return pb
+            if status==2: #log
+                return log
 
     def rowCount(self,index):
         return len(self.debugEvent)
@@ -33,7 +36,7 @@ class debugEventModel(QAbstractListModel):
     def addEv(self,error,text):
         self.signalAddEv.emit(error,text)
 
-    @pyqtSlot(bool,str)
+    @pyqtSlot(int,str)
     def addEvGUIThread(self,error,text):
         assert threading.current_thread() is threading.main_thread()
         index = QModelIndex()

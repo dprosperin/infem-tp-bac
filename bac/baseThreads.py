@@ -42,12 +42,19 @@ class ferry(threading.Thread):
         if not cond:
             msg = "erreur '"+info+"': bac dans l'état '"+ferry.fsmString[self.fsm.current]
             if self.debugEventModel:
-                self.debugEventModel.addEv(True,msg)
+                self.debugEventModel.addEv(1,msg)
             print(msg)
             sys.exit(1)
         else:
             if self.debugEventModel and msgIfOk:
-                self.debugEventModel.addEv(False,'ferry: : '+info)
+                self.debugEventModel.addEv(0,'ferry: : '+info)
+
+    def log(self,txt):
+        if self.debugEventModel:
+            if isinstance(txt,str):
+                self.debugEventModel.addEv(2,txt)
+            else:
+                self.debugEventModel.addEv(1,'bad argument when calling log')
 
     def traverser(self):
         self.check(self.fsm.isstate('atStart'),'traverser')
@@ -105,14 +112,20 @@ class car(threading.Thread):
         if not cond:
             msg = "erreur '"+info+"': voiture "+str(self.carId) +" dans l'état '"+car.fsmString[self.fsm.current]+"' et bac dans l'état '"+self.ferry.fsmString[self.ferry.fsm.current]+"'"
             if self.debugEventModel:
-                self.debugEventModel.addEv(True,msg)
+                self.debugEventModel.addEv(1,msg)
             print(msg)
             sys.exit(1)
         else:
             if self.debugEventModel and msgIfOk:
-                self.debugEventModel.addEv(False,'voiture '+str(self.carId)+': '+info)
+                self.debugEventModel.addEv(0,'voiture '+str(self.carId)+': '+info)
 
-    
+    def log(self,txt):
+        if self.debugEventModel:
+            if isinstance(txt,str):
+                self.debugEventModel.addEv(2,txt)
+            else:
+                self.debugEventModel.addEv(1,'bad argument when calling log')
+
     def avancer(self):
         #drive
         self.check(self.fsm.isstate('atStart'),'avancer')

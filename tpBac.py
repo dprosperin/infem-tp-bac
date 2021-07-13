@@ -18,6 +18,7 @@ def ferryRun(self):
         - self.traverser()
         - self.revenir()
     """
+    self.log("ne fait rien…")
     time.sleep(1)
 
 def carRun(self):
@@ -27,6 +28,7 @@ def carRun(self):
         - self.debarquer()
     """
     self.avancer()
+    self.log("devant l'eau!")
     time.sleep(1)
 
 def terminateCalled(self):
