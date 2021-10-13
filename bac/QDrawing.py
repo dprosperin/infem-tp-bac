@@ -32,7 +32,7 @@ class QDrawing(QWidget):
         height = painter.device().height()
         riverWidth = .3*width
         ferryWidth = .12*width
-        groundFirstPartWidth = .6*width
+        groundFirstPartWidth = .56*width
         carWidth = ferryWidth*0.9
         pix = []
         for i in range(10):
@@ -55,6 +55,7 @@ class QDrawing(QWidget):
         painter.fillRect(ferry, brush)
         #car
         carPosInFerry = ferryPixelPos+.1*carWidth
+        carPosUnloaded = groundFirstPartWidth+(riverWidth-ferryWidth) +.1*carWidth
         for i in range(10):
             if self.carState[i] == 'drive': 
                 painter.drawPixmap(self.carPos[i]*(groundFirstPartWidth-carWidth),i*height/10.,pix[i])
@@ -63,7 +64,7 @@ class QDrawing(QWidget):
             elif self.carState[i] == 'ferry':
                 painter.drawPixmap(carPosInFerry,i*height/10.,pix[i])
             elif self.carState[i] == 'unload':
-                painter.drawPixmap(carPosInFerry + 1.2*carWidth*self.carPos[i],i*height/10.,pix[i])
+                painter.drawPixmap(carPosUnloaded + 1.2*carWidth*self.carPos[i],i*height/10.,pix[i])
             else:
                 raise Exception('internal error car state in QDrawing')
 
@@ -113,7 +114,7 @@ class QDrawing(QWidget):
         self.carState[i] = 'ferry'
 
     def setUnloadPos(self,pos,i):
-        """ Update the car position on gui during loading part.
+        """ Update the car position on gui during unloading part.
         Position, should be set between 0.0 and 1.0.
         This function may be called by another thread (non gui) """
         self.carState[i] = 'unload'
