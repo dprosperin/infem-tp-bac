@@ -11,6 +11,8 @@ __synchro__ = threading.Condition()
 
 class Semaphore():
     def __init__(self,value,name=None):
+        if value < 0:
+            raise ValueError('A semaphore should NOT be initialized with a negative value.')
         self.value = value
         self.name = name
         if sModel:
