@@ -23,7 +23,7 @@ class debugEventModel(QAbstractListModel):
         if role == Qt.DisplayRole:
             return text
         if role == Qt.ToolTipRole:
-            return 'tooltip:'+text
+            return text
         if role == Qt.DecorationRole:
             if status==1: #error
                 return pb

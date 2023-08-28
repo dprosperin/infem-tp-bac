@@ -36,7 +36,7 @@ class QDrawing(QWidget):
         carWidth = ferryWidth*0.9
         pix = []
         for i in range(10):
-            pix.append(self.pixOrig[i].scaledToWidth(carWidth,Qt.SmoothTransformation))
+            pix.append(self.pixOrig[i].scaledToWidth(int(carWidth),Qt.SmoothTransformation))
         #background
         colorGround = QColor('#a77844')
         colorWater  = QColor('#0f03ff')
@@ -46,11 +46,11 @@ class QDrawing(QWidget):
         rectG = QRect(0, 0, width, height)
         painter.fillRect(rectG, brush)
         brush.setColor(colorWater)
-        rectW = QRect(groundFirstPartWidth, 0, riverWidth, height)
+        rectW = QRect(int(groundFirstPartWidth), 0, int(riverWidth), int(height))
         painter.fillRect(rectW, brush)
         #ferry
         ferryPixelPos = groundFirstPartWidth+(riverWidth-ferryWidth)*self.ferryPos
-        ferry = QRect(ferryPixelPos, 0, ferryWidth, height)
+        ferry = QRect(int(ferryPixelPos), 0, int(ferryWidth), int(height))
         brush.setColor(colorFerry)
         painter.fillRect(ferry, brush)
         #car
@@ -58,13 +58,13 @@ class QDrawing(QWidget):
         carPosUnloaded = groundFirstPartWidth+(riverWidth-ferryWidth) +.1*carWidth
         for i in range(10):
             if self.carState[i] == 'drive': 
-                painter.drawPixmap(self.carPos[i]*(groundFirstPartWidth-carWidth),i*height/10.,pix[i])
+                painter.drawPixmap(int(self.carPos[i]*(groundFirstPartWidth-carWidth)),int(i*height/10.),pix[i])
             elif self.carState[i] == 'load': #offset in ferry: .1*carWidth
-                painter.drawPixmap(groundFirstPartWidth+carWidth*(self.carPos[i]*1.1-1),i*height/10.,pix[i])
+                painter.drawPixmap(int(groundFirstPartWidth+carWidth*(self.carPos[i]*1.1-1)),int(i*height/10.),pix[i])
             elif self.carState[i] == 'ferry':
-                painter.drawPixmap(carPosInFerry,i*height/10.,pix[i])
+                painter.drawPixmap(int(carPosInFerry),int(i*height/10.),pix[i])
             elif self.carState[i] == 'unload':
-                painter.drawPixmap(carPosUnloaded + 1.2*carWidth*self.carPos[i],i*height/10.,pix[i])
+                painter.drawPixmap(int(carPosUnloaded + 1.2*carWidth*self.carPos[i]),int(i*height/10.),pix[i])
             else:
                 raise Exception('internal error car state in QDrawing')
 

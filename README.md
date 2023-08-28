@@ -10,7 +10,7 @@ Les fichiers sont organisés:
 
 ## Installation
 
-Le fichier requiert **Python 3** (testé avec Python 3.6.9 et 3.8.5) et dépend de 2 bibliothèques externes:
+Le fichier requiert **Python 3** (testé avec Python 3.6.9, 3.8.5 et 3.11.2) et dépend de 2 bibliothèques externes:
 
 ```sh
 pip install PyQt5 fysom

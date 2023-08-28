@@ -23,7 +23,7 @@ class ferry(threading.Thread):
                  'atEnd': "à l'arrivée",
                  'returning': 'en retour'}
     def __init__(self,qdrawing,debugEventModel=None):
-        threading.Thread.__init__(self,name='Ferry',daemon=True)
+        threading.Thread.__init__(self,name='ferry',daemon=True)
         self.drawing = qdrawing
         self.debugEventModel = debugEventModel
 
