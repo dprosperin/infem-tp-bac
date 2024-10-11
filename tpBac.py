@@ -19,7 +19,7 @@ def ferryRun(self):
         - self.revenir()
     """
     self.log("ne fait rien…")
-    time.sleep(1)
+    self.log('fin')
 
 def carRun(self):
     """ fonction principale de chaque voiture. Les méthodes principales sont:
@@ -29,7 +29,7 @@ def carRun(self):
     """
     self.avancer()
     self.log("devant l'eau!")
-    time.sleep(1)
+    self.log('fin')
 
 def terminateCalled(self):
     """ fonction appelée lors d'un clic sur le bouton de terminaison """

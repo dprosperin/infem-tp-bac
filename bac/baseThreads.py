@@ -47,12 +47,12 @@ class ferry(threading.Thread):
             sys.exit(1)
         else:
             if self.debugEventModel and msgIfOk:
-                self.debugEventModel.addEv(0,'ferry: : '+info)
+                self.debugEventModel.addEv(0,'ferry: '+info)
 
     def log(self,txt):
         if self.debugEventModel:
             if isinstance(txt,str):
-                self.debugEventModel.addEv(2,txt)
+                self.debugEventModel.addEv(2,'ferry: '+txt)
             else:
                 self.debugEventModel.addEv(1,'bad argument when calling log')
 
@@ -122,7 +122,7 @@ class car(threading.Thread):
     def log(self,txt):
         if self.debugEventModel:
             if isinstance(txt,str):
-                self.debugEventModel.addEv(2,txt)
+                self.debugEventModel.addEv(2,'voiture '+str(self.carId)+': '+txt)
             else:
                 self.debugEventModel.addEv(1,'bad argument when calling log')
 
