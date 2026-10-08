@@ -12,16 +12,20 @@ import time
 
 #déclaration des sémaphores: valeur init, info pour le debug
 semaphore1 = infem.Semaphore(4,"S1")
-#semaphore2 = infem.Semaphore(4 ,"Départ ferry")
+semaphore2 = infem.Semaphore(0,"Départ ferry")
+
 
 def ferryRun(self):
     """ fonction principale du bac. Les methodes principales sont:
         - self.traverser()
         - self.revenir()
     """
-    #semaphore2.V()
-    #self.traverser()
-    self.log("ne fait rien…")
+    semaphore2.acquire()
+    semaphore2.acquire()
+    semaphore2.acquire()
+    semaphore2.acquire()
+    self.traverser()
+    self.log("traverser")
     self.log('fin')
 
 def carRun(self):
@@ -34,7 +38,7 @@ def carRun(self):
     semaphore1.P()
     self.embarquer()
     self.log("4 véhicules embarqués")
-    #semaphore2.P()
+    semaphore2.release()
 
 
 def terminateCalled(self):
