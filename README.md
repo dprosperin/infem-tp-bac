@@ -22,3 +22,18 @@ Après avoir modifier le fichier `tpBac.py`, il faut *exécuter*, soit par un do
 ```
 python3 tpBac.py
 ```
+
+Si lors de l'activation du virtualenv Powershell rale :
+```
+.\venv\Scripts\activate : Impossible de charger le fichier
+C:\Users\david\Documents\GitHub\infem-tp-bac\venv\Scripts\Activate.ps1, car l’exécution de scripts est désactivée sur
+ce système. Pour plus d’informations, consultez about_Execution_Policies à l’adresse
+https://go.microsoft.com/fwlink/?LinkID=135170.
+Au caractère Ligne:1 : 1
++ .\venv\Scripts\activate
++ ~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : Erreur de sécurité : (:) [], PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+```
+
+Lancer : `Set-ExecutionPolicy -ExecutionPolicy Bypass -Scope Process -Force`

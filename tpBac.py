@@ -11,21 +11,26 @@ from baseThreads import *
 import time
 
 #déclaration des sémaphores: valeur init, info pour le debug
-semaphore1 = infem.Semaphore(4,"S1")
-semaphore2 = infem.Semaphore(0,"Départ ferry")
-
+s1_attente_4_voiture = infem.Semaphore(4,"Embarquement véhicules")
+s2_depart_ferry = infem.Semaphore(0,"Départ ferry")
+s3_debarquement_voiture = infem.Semaphore(0, "Débarquement véhicules")
 
 def ferryRun(self):
     """ fonction principale du bac. Les methodes principales sont:
         - self.traverser()
         - self.revenir()
     """
-    semaphore2.moinsUn()
-    semaphore2.moinsUn()
-    semaphore2.moinsUn()
-    semaphore2.moinsUn()
+    # initialise a moins -4 le ferry
+    for i in range(4):
+        s2_depart_ferry.moinsUn()
+
     self.traverser()
-    self.log("traverser")
+    self.log("arrivé")
+
+    # reset à 0 pour le débrquement
+    for i in range(4):
+        s3_debarquement_voiture.plusUn()
+
     self.log('fin')
 
 def carRun(self):
@@ -34,12 +39,19 @@ def carRun(self):
         - self.embarquer()
         - self.debarquer()
     """
-    self.avancer()
-    semaphore1.moinsUn()
+    self.avancer() #faire avancer les voiture
+    # Laisse passé sur le ferry les 4 première voiture
+    s1_attente_4_voiture.moinsUn()
     self.embarquer()
     self.log("4 véhicules embarqués")
-    semaphore2.plusUn()
+    # Incrémente pour démarer le ferry
+    s2_depart_ferry.plusUn()
 
+    # attend que le ferry est reset à 0 pour débarquer
+    s3_debarquement_voiture.moinsUn()
+    self.debarquer()
+    self.log("Débarquement " + self.name)
+    self.avancer()
 
 def terminateCalled(self):
     """ fonction appelée lors d'un clic sur le bouton de terminaison """

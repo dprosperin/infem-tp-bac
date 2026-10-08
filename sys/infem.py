@@ -19,6 +19,12 @@ class Semaphore():
             sModel.addSemaphore(name,value)
         pass
 
+    def plusUn(self):
+        self.release()
+
+    def moinsUn(self):
+        self.acquire()
+
     def acquire(self):
         """ acquire the semaphore.
         if the value is > 0, it decrements the semaphore value and returns
