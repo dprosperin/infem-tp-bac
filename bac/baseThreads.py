@@ -131,7 +131,7 @@ class car(threading.Thread):
         self.check(self.fsm.isstate('atStart'),'avancer')
         try:
             self.fsm.drive()
-            speed = random.random()/50+0.05
+            speed = random.random()/5+0.05
             for i in range(70):
                 time.sleep(speed)
                 self.drawing.setDrivePos(i/70.,self.carId)

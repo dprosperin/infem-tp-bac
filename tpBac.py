@@ -24,26 +24,27 @@ def ferryRun(self):
         - self.traverser()
         - self.revenir()
     """
-    # initialise a moins -4 le ferry
-    for i in range(4):
-        s2_depart_ferry.moinsUn()
+    while True :
+        # initialise a moins -4 le ferry
+        for i in range(4):
+            s2_depart_ferry.moinsUn()
 
-    self.traverser()
-    self.log("arrivé")
+        self.traverser()
+        self.log("arrivé")
 
-    # reset à 0 pour le débrquement
-    for i in range(4):
-        s3_debarquement_voiture.plusUn()
+        # reset à 0 pour le débrquement
+        for i in range(4):
+            s3_debarquement_voiture.plusUn()
 
-    for i in range(4):
-        s4_revenir_ferry.moinsUn()
+        for i in range(4):
+            s4_revenir_ferry.moinsUn()
 
-    self.revenir()
+        self.revenir()
 
-    for i in range(4):
-        s1_attente_4_voiture.plusUn()
+        for i in range(4):
+            s1_attente_4_voiture.plusUn()
 
-    self.log('fin')
+        self.log('fin')
 
 def carRun(self):
     """ fonction principale de chaque voiture. Les méthodes principales sont:
@@ -51,23 +52,22 @@ def carRun(self):
         - self.embarquer()
         - self.debarquer()
     """
-    self.avancer() #faire avancer les voiture
-    # Laisse passé sur le ferry les 4 première voiture
-    s1_attente_4_voiture.moinsUn()
-    self.embarquer()
-    self.log("4 véhicules embarqués")
-    # Incrémente pour démarer le ferry
-    s2_depart_ferry.plusUn()
+    while True :
+        self.avancer() #faire avancer les voiture
+        # Laisse passé sur le ferry les 4 première voiture
+        s1_attente_4_voiture.moinsUn()
+        self.embarquer()
+        self.log("4 véhicules embarqués")
+        # Incrémente pour démarer le ferry
+        s2_depart_ferry.plusUn()
 
-    # attend que le ferry est reset à 0 pour débarquer
-    s3_debarquement_voiture.moinsUn()
-    self.debarquer()
-    self.log("Débarquement " + self.name)
+        # attend que le ferry est reset à 0 pour débarquer
+        s3_debarquement_voiture.moinsUn()
+        self.debarquer()
+        self.log("Débarquement " + self.name)
 
-     # Incrémente pour faire revenir le ferry quand les véhicule on débarquer tah 45
-    s4_revenir_ferry.plusUn()
-
-    self.avancer()
+        # Incrémente pour faire revenir le ferry quand les véhicule on débarquer tah 45
+        s4_revenir_ferry.plusUn()
 
 
 
