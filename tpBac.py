@@ -9,11 +9,15 @@ import infemGUI
 from baseThreads import *
 
 import time
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 #déclaration des sémaphores: valeur init, info pour le debug
 s1_attente_4_voiture = infem.Semaphore(4,"Embarquement véhicules")
 s2_depart_ferry = infem.Semaphore(0,"Départ ferry")
 s3_debarquement_voiture = infem.Semaphore(0, "Débarquement véhicules")
+s4_revenir_ferry  = infem.Semaphore(0,"revenir ferry")
+
 
 def ferryRun(self):
     """ fonction principale du bac. Les methodes principales sont:
@@ -30,6 +34,14 @@ def ferryRun(self):
     # reset à 0 pour le débrquement
     for i in range(4):
         s3_debarquement_voiture.plusUn()
+
+    for i in range(4):
+        s4_revenir_ferry.moinsUn()
+
+    self.revenir()
+
+    for i in range(4):
+        s1_attente_4_voiture.plusUn()
 
     self.log('fin')
 
@@ -51,7 +63,13 @@ def carRun(self):
     s3_debarquement_voiture.moinsUn()
     self.debarquer()
     self.log("Débarquement " + self.name)
+
+     # Incrémente pour faire revenir le ferry quand les véhicule on débarquer tah 45
+    s4_revenir_ferry.plusUn()
+
     self.avancer()
+
+
 
 def terminateCalled(self):
     """ fonction appelée lors d'un clic sur le bouton de terminaison """
