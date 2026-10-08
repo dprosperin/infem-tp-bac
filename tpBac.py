@@ -20,10 +20,10 @@ def ferryRun(self):
         - self.traverser()
         - self.revenir()
     """
-    semaphore2.acquire()
-    semaphore2.acquire()
-    semaphore2.acquire()
-    semaphore2.acquire()
+    semaphore2.moinsUn()
+    semaphore2.moinsUn()
+    semaphore2.moinsUn()
+    semaphore2.moinsUn()
     self.traverser()
     self.log("traverser")
     self.log('fin')
@@ -35,10 +35,10 @@ def carRun(self):
         - self.debarquer()
     """
     self.avancer()
-    semaphore1.P()
+    semaphore1.moinsUn()
     self.embarquer()
     self.log("4 véhicules embarqués")
-    semaphore2.release()
+    semaphore2.plusUn()
 
 
 def terminateCalled(self):
