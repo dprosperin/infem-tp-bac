@@ -19,8 +19,6 @@ s3_debarquement_voiture = infem.Semaphore(0, "Débarquement véhicules")
 s4_revenir_ferry  = infem.Semaphore(0,"revenir ferry")
 s5_arret          = infem.Semaphore(0,"arret")
 
-isRunning = True
-
 def ferryRun(self):
     """ fonction principale du bac. Les methodes principales sont:
         - self.traverser()
@@ -31,25 +29,42 @@ def ferryRun(self):
     while isRunning :
         # initialise a moins -4 le ferry
         for i in range(4):
-            s2_depart_ferry.moinsUn()
+            #s2_depart_ferry.moinsUn()     
+            departOuArret = infem.ou2Semaphore(s5_arret,s2_depart_ferry) 
 
-        self.traverser()
-        self.log("arrivé")
+            if departOuArret == 1:
+                self.log("annulation depart : 1")
+                s5_arret.plusUn()
+                isRunning = False
 
-        # reset à 0 pour le débrquement
-        for i in range(4):
-            s3_debarquement_voiture.plusUn()
+            elif departOuArret == 2:
+                self.log("depart du ferry: 2")
 
-        for i in range(4):
-            s4_revenir_ferry.moinsUn()
+                self.traverser()
+                self.log("arrivé du ferry")
 
-        self.revenir()
+                # reset à 0 pour le débrquement
+                for i in range(4):
+                    s3_debarquement_voiture.plusUn()
 
-        for i in range(4):
-            s1_attente_4_voiture.plusUn()
+                for i in range(4):
+                    #s4_revenir_ferry.moinsUn()
+                    revenirOuArret = infem.ou2Semaphore(s5_arret,s4_revenir_ferry) 
 
-        self.log('fin')
+                    if departOuArret == 1:
+                        self.log("annulation revenir : 1")
+                        s5_arret.plusUn()
+                        isRunning = False
 
+                    if departOuArret == 2:
+                        self.log("retour du ferry: 2")
+                        self.revenir()
+                            
+                        for i in range(4):
+                            s1_attente_4_voiture.plusUn()
+
+                        self.log('fin')
+            
 def carRun(self):
     """ fonction principale de chaque voiture. Les méthodes principales sont:
         - self.avancer()
@@ -58,40 +73,45 @@ def carRun(self):
     """
     isRunning = True
     while isRunning :
-        self.avancer() #faire avancer les voiture
+        self.avancer() 
+        
+        #faire avancer les voiture
         # Laisse passé sur le ferry les 4 première voiture
         # s1_attente_4_voiture.moinsUn()
+        attenteVoitureOuArret = infem.ou2Semaphore(s5_arret,s1_attente_4_voiture)
 
-        retourOuSem = infem.ou2Semaphore(s1_attente_4_voiture, s5_arret,  500)
-
-        match retourOuSem:
-            case 1:
-                self.log("retourOuSem : 1")
+        if attenteVoitureOuArret == 1:
+            self.log("arret de l'embarquement : 1")
+            s5_arret.plusUn()
+            isRunning = False
+            
+        elif attenteVoitureOuArret == 2:
                 self.embarquer()
-
-                self.log("4 véhicules embarqués")
+                self.log("+ 1 vehicule embarqué : 2")
                 # Incrémente pour démarer le ferry
                 s2_depart_ferry.plusUn()
+        
+                # attend que le ferry est reset à 0 pour débarquer
+                #s3_debarquement_voiture.moinsUn()
+                descendreVoitureOuArret = infem.ou2Semaphore(s3_debarquement_voiture,s5_arret)
 
-                 # attend que le ferry est reset à 0 pour débarquer
-                s3_debarquement_voiture.moinsUn()
-                self.debarquer()
-                self.log("Débarquement " + self.name)
-                # Incrémente pour faire revenir le ferry quand les véhicule on débarquer tah 45
-                s4_revenir_ferry.plusUn()
-            case 2:
-                self.log("retourOuSem : 2")
-                s5_arret.plusUn()
-                isRunning = False
-            case 3:
-                self.log("retourOuSem : timeout")
-            case _:
-                self.log("retourOuSem : default")
+                if descendreVoitureOuArret == 1:
+                        self.debarquer()
+                        self.log("Débarquement " + self.name)
+                        # Incrémente pour faire revenir le ferry quand les véhicule on débarquer tah 45
+                        s4_revenir_ferry.plusUn()
+
+                elif  descendreVoitureOuArret == 2:
+                        self.log("arret du debarquement : 2")
+                        s5_arret.plusUn()
+                        isRunning = False
+
 
 def terminateCalled(self):
     """ fonction appelée lors d'un clic sur le bouton de terminaison """
     print("L'application doit se terminer correctement")
     s5_arret.plusUn()
+    
 
 #associe les fonctions aux methodes de classes (ne pas modifier)
 ferry.run = ferryRun
