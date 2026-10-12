@@ -27,7 +27,7 @@ def ferryRun(self):
         - self.revenir()
     """
     # s5_arret.plusUn()
-
+    isRunning = True
     while isRunning :
         # initialise a moins -4 le ferry
         for i in range(4):
@@ -56,36 +56,37 @@ def carRun(self):
         - self.embarquer()
         - self.debarquer()
     """
+    isRunning = True
     while isRunning :
         self.avancer() #faire avancer les voiture
         # Laisse passé sur le ferry les 4 première voiture
         # s1_attente_4_voiture.moinsUn()
 
-        retourOuSem = infem.ou2Semaphore(s1_attente_4_voiture, s5_arret,  0)
+        retourOuSem = infem.ou2Semaphore(s1_attente_4_voiture, s5_arret,  500)
 
         match retourOuSem:
             case 1:
                 self.log("retourOuSem : 1")
                 self.embarquer()
+
+                self.log("4 véhicules embarqués")
+                # Incrémente pour démarer le ferry
+                s2_depart_ferry.plusUn()
+
+                 # attend que le ferry est reset à 0 pour débarquer
+                s3_debarquement_voiture.moinsUn()
+                self.debarquer()
+                self.log("Débarquement " + self.name)
+                # Incrémente pour faire revenir le ferry quand les véhicule on débarquer tah 45
+                s4_revenir_ferry.plusUn()
             case 2:
                 self.log("retourOuSem : 2")
+                s5_arret.plusUn()
                 isRunning = False
             case 3:
                 self.log("retourOuSem : timeout")
             case _:
                 self.log("retourOuSem : default")
-
-        self.log("4 véhicules embarqués")
-        # Incrémente pour démarer le ferry
-        s2_depart_ferry.plusUn()
-
-        # attend que le ferry est reset à 0 pour débarquer
-        s3_debarquement_voiture.moinsUn()
-        self.debarquer()
-        self.log("Débarquement " + self.name)
-        # Incrémente pour faire revenir le ferry quand les véhicule on débarquer tah 45
-        s4_revenir_ferry.plusUn()
-
 
 def terminateCalled(self):
     """ fonction appelée lors d'un clic sur le bouton de terminaison """
