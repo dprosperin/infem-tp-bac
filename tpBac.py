@@ -28,29 +28,54 @@ def ferryRun(self):
     # s5_arret.plusUn()
     isRunning = True
     while isRunning :
-        # initialise a moins -4 le ferry
+        heureArriver = time.time()
+        self.log("Heure d'arrivé du ferry : " + str(heureArriver))  
+
+
+        nbVoiture = 0
         for i in range(4):
-            #s2_depart_ferry.moinsUn()       
-            departOuArret = infem.ou2Semaphore(s5_arret,s2_depart_ferry) 
+            # initialise a moins -4 le ferry
+            #s2_depart_ferry.moinsUn()   
+            if nbVoiture == 0:
+                departOuArret = infem.ou2Semaphore(s5_arret, s2_depart_ferry) 
+            else:                 
+                tempsRestant = (heureArriver + 2) - time.time() 
+                self.log("Temps restant : " + str(tempsRestant))
+                if tempsRestant <= 0:
+                    self.log("timeout revenir : 1")
+                    break
+
+                departOuArret = infem.ou2Semaphore(s5_arret, s2_depart_ferry,tempsRestant) 
 
             if departOuArret == 1:
                 self.log("arret du depart : 1")
                 s5_arret.plusUn()
-                isRunning = False
+                isRunning = False     
+                break           
+
+            elif departOuArret == 2:
+                nbVoiture += 1
+
+            elif departOuArret == 3:
+                self.log("timeout revenir : 1")
+                break
 
         if isRunning == True:    
+            # attend que les voitures finissent d'embarquer
+            s15_1_voiture_embarque.moinsUn()
+
             self.log("depart du ferry: 2")
             self.traverser()
-            self.log("arrivé du ferry")
+            self.log("arriver du ferry")
 
             # reset à 0 pour le débrquement
-            for i in range(4):
+            for i in range(nbVoiture):
                 s3_debarquement_voiture.plusUn()
 
-            for i in range(4):
+            for i in range(nbVoiture):
                 #s4_revenir_ferry.moinsUn()
                 departOuArret = infem.ou2Semaphore(s5_arret,s4_revenir_ferry) 
-
+                
                 if departOuArret == 1:
                     self.log("arret du depart : 1")
                     s5_arret.plusUn()
@@ -60,11 +85,12 @@ def ferryRun(self):
                 self.log("retour du ferry: 2")
                 self.revenir()
                     
-                for i in range(4):
+                for i in range(nbVoiture):
                     s1_attente_4_voiture.plusUn()
 
-                self.log('fin')
+                s15_1_voiture_embarque.plusUn()
 
+                self.log('fin')
             
 def carRun(self):
     """ fonction principale de chaque voiture. Les méthodes principales sont:
