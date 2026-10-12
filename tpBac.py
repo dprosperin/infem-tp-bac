@@ -17,14 +17,18 @@ s1_attente_4_voiture = infem.Semaphore(4,"Embarquement véhicules")
 s2_depart_ferry = infem.Semaphore(0,"Départ ferry")
 s3_debarquement_voiture = infem.Semaphore(0, "Débarquement véhicules")
 s4_revenir_ferry  = infem.Semaphore(0,"revenir ferry")
+s5_arret          = infem.Semaphore(0,"arret")
 
+isRunning = True
 
 def ferryRun(self):
     """ fonction principale du bac. Les methodes principales sont:
         - self.traverser()
         - self.revenir()
     """
-    while True :
+    # s5_arret.plusUn()
+
+    while isRunning :
         # initialise a moins -4 le ferry
         for i in range(4):
             s2_depart_ferry.moinsUn()
@@ -52,11 +56,25 @@ def carRun(self):
         - self.embarquer()
         - self.debarquer()
     """
-    while True :
+    while isRunning :
         self.avancer() #faire avancer les voiture
         # Laisse passé sur le ferry les 4 première voiture
-        s1_attente_4_voiture.moinsUn()
-        self.embarquer()
+        # s1_attente_4_voiture.moinsUn()
+
+        retourOuSem = infem.ou2Semaphore(s1_attente_4_voiture, s5_arret,  0)
+
+        match retourOuSem:
+            case 1:
+                self.log("retourOuSem : 1")
+                self.embarquer()
+            case 2:
+                self.log("retourOuSem : 2")
+                isRunning = False
+            case 3:
+                self.log("retourOuSem : timeout")
+            case _:
+                self.log("retourOuSem : default")
+
         self.log("4 véhicules embarqués")
         # Incrémente pour démarer le ferry
         s2_depart_ferry.plusUn()
@@ -65,15 +83,14 @@ def carRun(self):
         s3_debarquement_voiture.moinsUn()
         self.debarquer()
         self.log("Débarquement " + self.name)
-
         # Incrémente pour faire revenir le ferry quand les véhicule on débarquer tah 45
         s4_revenir_ferry.plusUn()
-
 
 
 def terminateCalled(self):
     """ fonction appelée lors d'un clic sur le bouton de terminaison """
     print("L'application doit se terminer correctement")
+    s5_arret.plusUn()
 
 #associe les fonctions aux methodes de classes (ne pas modifier)
 ferry.run = ferryRun
